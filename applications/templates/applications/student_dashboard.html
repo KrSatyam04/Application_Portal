@@ -1,0 +1,55 @@
+{% extends 'applications/base.html' %}
+
+{% block content %}
+<section class="card">
+  <h2>Welcome, {{ profile.user.first_name }}</h2>
+  <div class="progress">
+    <div class="progress-bar" style="width: {{ completion }}%"></div>
+  </div>
+  <p>{{ completion }}% of mandatory documents approved.</p>
+  {% if pending_items %}
+    <div class="callout">
+      <strong>Pending mandatory items:</strong>
+      <ul>
+        {% for item in pending_items %}
+          <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+</section>
+<section class="card">
+  <h3>Document Checklist</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Document</th>
+        <th>Mandatory</th>
+        <th>Status</th>
+        <th>Last Updated</th>
+        <th>Admin Note</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in checklist %}
+        <tr>
+          <td>{{ item.requirement.display_name }}</td>
+          <td>{% if item.requirement.mandatory %}Yes{% else %}Optional{% endif %}</td>
+          <td><span class="badge {{ item.status }}">{{ item.status|capfirst }}</span></td>
+          <td>{% if item.last_updated %}{{ item.last_updated|date:"Y-m-d H:i" }}{% else %}-{% endif %}</td>
+          <td>{{ item.note|default:'-' }}</td>
+          <td>
+            <a class="button small" href="{% url 'upload_document' item.requirement.id %}">
+              {% if item.upload %}Replace{% else %}Upload{% endif %}
+            </a>
+            {% if item.upload %}
+              <a class="button small secondary" href="{% url 'student_download_document' item.upload.id %}">Download</a>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}
