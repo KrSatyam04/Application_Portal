@@ -1,0 +1,12 @@
+{% extends 'applications/base.html' %}
+
+{% block content %}
+<section class="card">
+  <h2>Welcome</h2>
+  <p>Submit your documents securely and track your application progress.</p>
+  <div class="button-row">
+    <a class="button" href="{% url 'signup' %}">Get Started</a>
+    <a class="button secondary" href="{% url 'login' %}">Login</a>
+  </div>
+</section>
+{% endblock %}

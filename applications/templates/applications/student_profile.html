@@ -1,0 +1,13 @@
+{% extends 'applications/base.html' %}
+
+{% block content %}
+<section class="card">
+  <h2>Profile</h2>
+  <p>Confirm your application details and select a course.</p>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="button">Save & Continue</button>
+  </form>
+</section>
+{% endblock %}

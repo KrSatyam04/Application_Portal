@@ -1,0 +1,13 @@
+{% extends 'applications/base.html' %}
+
+{% block content %}
+<section class="card">
+  <h2>Upload {{ requirement.display_name }}</h2>
+  <p>Allowed types: {{ requirement.allowed_file_types }} | Max size: {{ requirement.max_file_size_mb }} MB</p>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="button">Upload</button>
+  </form>
+</section>
+{% endblock %}

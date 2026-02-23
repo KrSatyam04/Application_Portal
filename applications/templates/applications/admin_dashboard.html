@@ -1,0 +1,60 @@
+{% extends 'applications/base.html' %}
+
+{% block content %}
+<section class="card">
+  <h2>Admin Dashboard</h2>
+  <div class="stats">
+    <div><strong>Total Students:</strong> {{ totals }}</div>
+    <div><strong>In Progress:</strong> {{ total_in_progress }}</div>
+    <div><strong>Complete:</strong> {{ total_complete }}</div>
+    <div><strong>Needs Revision:</strong> {{ total_needs_revision }}</div>
+  </div>
+  <form method="get" class="filters">
+    <input type="text" name="q" placeholder="Search name/email/application" value="{{ request.GET.q }}">
+    <select name="course">
+      <option value="">All Courses</option>
+      {% for course in courses %}
+        <option value="{{ course.code }}" {% if request.GET.course == course.code %}selected{% endif %}>{{ course.name }}</option>
+      {% endfor %}
+    </select>
+    <select name="status">
+      <option value="">All Statuses</option>
+      <option value="In Progress" {% if request.GET.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+      <option value="Needs Revision" {% if request.GET.status == 'Needs Revision' %}selected{% endif %}>Needs Revision</option>
+      <option value="Complete" {% if request.GET.status == 'Complete' %}selected{% endif %}>Complete</option>
+    </select>
+    <button class="button small" type="submit">Filter</button>
+    <a class="button small secondary" href="{% url 'admin_export_csv' %}">Export CSV</a>
+  </form>
+</section>
+<section class="card">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Course</th>
+        <th>Completion</th>
+        <th>Last Activity</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+        <tr>
+          <td>{{ row.profile.user.get_full_name }}</td>
+          <td>{{ row.profile.user.email }}</td>
+          <td>{{ row.profile.course.name }}</td>
+          <td>{{ row.completion }}%</td>
+          <td>{% if row.last_activity %}{{ row.last_activity|date:"Y-m-d H:i" }}{% else %}-{% endif %}</td>
+          <td><span class="badge {{ row.status_label|slugify }}">{{ row.status_label }}</span></td>
+          <td><a class="button small" href="{% url 'admin_student_detail' row.profile.id %}">Review</a></td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="7">No students found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}
