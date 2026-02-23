@@ -1,39 +1,45 @@
 # Application Portal
 
-A secure document collection portal for education consultancy applications.
+A secure web application for education consultancies to collect, review, and track student application documents.
 
 ## Features
-- Student signup/login with a single application profile.
-- Course-driven document checklist and required details.
-- Multi-session uploads with status tracking and version history.
-- Admin dashboard for review, ZIP download, and CSV export.
+- Student authentication and single application profile.
+- Course-template driven detail fields and document checklist.
+- Multi-session uploads with validation, status tracking, and versioning.
+- Strict server-side file renaming format.
+- Staff review workflow with notes, ZIP download, and CSV export.
+- Audit logging for uploads, reviews, and exports.
 
-## Local Development
+## Run Locally (Python)
 
-### 1) Setup
+### 1) Install
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2) Database + Seed Data
+### 2) Migrate + seed
 ```bash
 python manage.py migrate
 ```
-The migration seeds course templates for Medicine, Engineering, and Master Program.
 
-### 3) Create Admin
+### 3) Create staff user
 ```bash
 python manage.py createsuperuser
 ```
-Mark staff users as `is_staff=True` to access the admin dashboard.
 
-### 4) Run
+### 4) Start web app (network-accessible)
 ```bash
-python manage.py runserver
+python manage.py runserver 0.0.0.0:8000
 ```
-Visit `http://127.0.0.1:8000/`.
+Open: `http://localhost:8000`.
+
+## Run with Docker (Production-like)
+```bash
+docker compose up --build
+```
+Open: `http://localhost:8000`.
 
 ## Tests
 ```bash
@@ -41,11 +47,15 @@ python manage.py test
 ```
 
 ## Environment Variables
-- `DJANGO_SECRET_KEY`: Django secret key.
-- `DJANGO_DEBUG`: `true` or `false`.
-- `DJANGO_ALLOWED_HOSTS`: Comma-separated hosts.
-- `DJANGO_CSRF_SECURE`: `true` to enforce secure CSRF cookies.
-- `DJANGO_SESSION_SECURE`: `true` to enforce secure session cookies.
-- `DJANGO_HSTS_SECONDS`: integer for HSTS max age.
-- `DJANGO_HSTS_INCLUDE_SUBDOMAINS`: `true`/`false`.
-- `DJANGO_HSTS_PRELOAD`: `true`/`false`.
+- `DJANGO_SECRET_KEY`
+- `DJANGO_DEBUG`
+- `DJANGO_ALLOWED_HOSTS`
+- `DJANGO_CSRF_TRUSTED_ORIGINS`
+- `DJANGO_CSRF_SECURE`
+- `DJANGO_SESSION_SECURE`
+- `DJANGO_HSTS_SECONDS`
+- `DJANGO_HSTS_INCLUDE_SUBDOMAINS`
+- `DJANGO_HSTS_PRELOAD`
+- `DJANGO_SUPERUSER_USERNAME` (Docker entrypoint)
+- `DJANGO_SUPERUSER_EMAIL` (Docker entrypoint)
+- `DJANGO_SUPERUSER_PASSWORD` (Docker entrypoint)
